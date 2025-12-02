@@ -15,7 +15,7 @@ class CLI:
         """Start the CLI application."""
         while True:
             self._display_menu()
-            choice = input("\nEnter your choice (1-5): ")
+            choice = input("\nEnter your choice (1-6): ")
             
             if choice == '1':
                 self._add_resource_menu()
@@ -26,6 +26,8 @@ class CLI:
             elif choice == '4':
                 self._remove_resource()
             elif choice == '5':
+                self._view_reports()
+            elif choice == '6':
                 print("\nGoodbye!")
                 sys.exit(0)
             else:
@@ -37,7 +39,8 @@ class CLI:
         print("2. List All Resources")
         print("3. Search Resources")
         print("4. Remove Resource")
-        print("5. Exit")
+        print("5. View Reports")
+        print("6. Exit")
         
     def _add_resource_menu(self):
         print("\nSelect Resource Type:")
@@ -120,3 +123,32 @@ class CLI:
             print("\nResource removed successfully.")
         else:
             print("\nResource not found.")
+    
+    def _view_reports(self):
+        """Display library reports using list comprehensions."""
+        print("\n=== Library Reports ===\n")
+        
+        # Inventory Report
+        print("--- Inventory Summary ---")
+        inventory = self.manager.generate_inventory_report()
+        print(f"Total Physical Books: {inventory['total_books']}")
+        print(f"Total E-Books: {inventory['total_ebooks']}")
+        print(f"Total Audiobooks: {inventory['total_audiobooks']}")
+        print(f"Total Resources: {inventory['total_resources']}")
+        
+        # Borrowing Report
+        print("\n--- Borrowing Statistics ---")
+        borrowing = self.manager.generate_borrowing_report()
+        print(f"Total Borrowers: {borrowing['total_borrowers']}")
+        print(f"Active Borrowers: {borrowing['active_borrowers']}")
+        print(f"Total Borrowed Items: {borrowing['total_borrowed_items']}")
+        print(f"Available Items: {borrowing['available_items']}")
+        
+        # Currently Borrowed Resources
+        borrowed_list = self.manager.get_borrowed_resources_list()
+        if borrowed_list:
+            print("\n--- Currently Borrowed Resources ---")
+            for item in borrowed_list:
+                print(f"  - {item['resource_title']} (ID: {item['resource_id']}) borrowed by {item['borrower']}")
+        else:
+            print("\n--- No resources currently borrowed ---")
